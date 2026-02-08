@@ -1,0 +1,41 @@
+name: picohttp-auto
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 */5 * *'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - run: git submodule update --remote --recursive
+      - run: ./scripts/picohttp-ios-xc.sh
+      - run: ditto -c -k --sequesterRsrc --keepParent PicoHTTPParser.xcframework PicoHTTPParser.xcframework.zip
+      - run: swift package compute-checksum PicoHTTPParser.xcframework.zip > CHECKSUM.txt
+      - run: echo "UP_SHA=$(cd upstream && git rev-parse HEAD)" >> $GITHUB_ENV
+      - run: echo "TAG=ios-$(date +%Y%m%d)-$(echo $UP_SHA | cut -c1-12)" >> $GITHUB_ENV
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add PicoHTTPParser.xcframework PicoHTTPParser.xcframework.zip CHECKSUM.txt Package.swift Sources/PicoHTTPParserShim/PicoHTTPParserShim.swift .gitmodules upstream
+          git commit -m "auto: refresh PicoHTTPParser.xcframework" || true
+          git push origin HEAD:main
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          body: |
+            upstream=${{ env.UP_SHA }}
+            checksum=$(cat CHECKSUM.txt)
+          files: |
+            PicoHTTPParser.xcframework.zip
+            CHECKSUM.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for t in $(gh release list -L 100 --json tagName,createdAt --jq 'sort_by(.createdAt)|reverse|.[2:]|.[].tagName');do gh release delete "$t" -y;done

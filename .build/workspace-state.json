@@ -1,0 +1,31 @@
+{
+  "object" : {
+    "artifacts" : [
+      {
+        "kind" : {
+          "xcframework" : {
+
+          }
+        },
+        "packageRef" : {
+          "identity" : "picohttpparser-spm",
+          "kind" : "root",
+          "location" : "/Users/admin/Desktop/picohttpparser-spm",
+          "name" : "picohttpparser-spm"
+        },
+        "path" : "/Users/admin/Desktop/picohttpparser-spm/PicoHTTPParser.xcframework",
+        "source" : {
+          "type" : "local"
+        },
+        "targetName" : "PicoHTTPParser"
+      }
+    ],
+    "dependencies" : [
+
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}

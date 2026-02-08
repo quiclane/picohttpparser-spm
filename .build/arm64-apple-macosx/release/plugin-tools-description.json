@@ -1,0 +1,231 @@
+{
+  "builtTestProducts" : [
+
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.PicoHTTPParserShim-arm64-apple-macosx26.0-release.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/sources",
+      "importPath" : "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/admin/Desktop/picohttpparser-spm/Sources/PicoHTTPParserShim/PicoHTTPParserShim.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "PicoHTTPParserShim",
+      "moduleOutputPath" : "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/Modules/PicoHTTPParserShim.swiftmodule",
+      "objects" : [
+        "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/PicoHTTPParserShim.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-whole-module-optimization",
+        "-num-threads",
+        "10",
+        "-serialize-diagnostics",
+        "-O",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/include/PicoHTTPParserShim-Swift.h",
+        "-color-diagnostics",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "picohttpparser_spm"
+      ],
+      "outputFileMapPath" : "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/PicoHTTPParserShim.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/Modules/PicoHTTPParserShim.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/admin/Desktop/picohttpparser-spm/Sources/PicoHTTPParserShim/PicoHTTPParserShim.swift"
+      ],
+      "tempsPath" : "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build",
+      "wholeModuleOptimization" : true
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "PicoHTTPParserShim" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "PicoHTTPParserShim",
+      "-package-name",
+      "picohttpparser_spm",
+      "-c",
+      "/Users/admin/Desktop/picohttpparser-spm/Sources/PicoHTTPParserShim/PicoHTTPParserShim.swift",
+      "-I",
+      "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-whole-module-optimization",
+      "-num-threads",
+      "10",
+      "-serialize-diagnostics",
+      "-O",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/include/PicoHTTPParserShim-Swift.h",
+      "-color-diagnostics",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "picohttpparser_spm",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "PicoHTTPParserShim" : [
+      "PicoHTTPParser"
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/admin/Desktop/picohttpparser-spm/Sources/PicoHTTPParserShim/PicoHTTPParserShim.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/sources"
+    },
+    "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "": {
+    "dependencies": "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/PicoHTTPParserShim.d",
+    "object": "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/PicoHTTPParserShim.o",
+    "swift-dependencies": "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/master.swiftdeps"
+  },
+  "/Users/admin/Desktop/picohttpparser-spm/Sources/PicoHTTPParserShim/PicoHTTPParserShim.swift": {
+    "object": "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/PicoHTTPParserShim.swift.o",
+    "swiftmodule": "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/PicoHTTPParserShim~partial.swiftmodule",
+    "swift-dependencies": "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/PicoHTTPParserShim.swiftdeps",
+    "diagnostics": "/Users/admin/Desktop/picohttpparser-spm/.build/arm64-apple-macosx/release/PicoHTTPParserShim.build/PicoHTTPParserShim.dia"
+  }
+}
