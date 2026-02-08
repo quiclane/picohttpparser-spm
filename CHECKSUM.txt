@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 6510bc2e4eae6870311edf5a14a516a464c07f0e4e2f2151243f7b8baad3024c
+=======
+f9859b79cbfde749a26240b93b7f23a2c0e080d9988795591194fbc8c4bd4c9b
+>>>>>>> ebe455e (Release 1.0.0 (PicoHTTPParser xcframework))
