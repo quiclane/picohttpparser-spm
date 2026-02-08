@@ -1,15 +1,15 @@
 name: picohttp-auto
-
 on:
   push:
     branches: [main]
   workflow_dispatch:
   schedule:
     - cron: "0 3 * * *"
-
+permissions:
+  contents: write
 jobs:
   build:
-    runs-on: macos-15-arm64
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -32,6 +32,7 @@ jobs:
       - name: Upstream SHA
         shell: bash
         run: |
+          set -euo pipefail
           echo "UP_SHA=$(cd upstream && git rev-parse HEAD)" >> "$GITHUB_ENV"
 
       - name: Next version tag
@@ -39,7 +40,7 @@ jobs:
         run: |
           set -euo pipefail
           git fetch --tags --force
-          LAST=$(git tag -l "[0-9]*.[0-9]*.[0-9]*" --sort=-v:refname | head -n 1)
+          LAST="$(git tag -l "[0-9]*.[0-9]*.[0-9]*" --sort=-v:refname | head -n 1)"
           test -n "${LAST:-}" || LAST="1.0.0"
           IFS=. read -r MA MI PA <<< "$LAST"
           PA=$((PA+1))
@@ -49,12 +50,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          SUM=$(tr -d "\n" < CHECKSUM.txt)
+          SUM="$(tr -d '\n' < CHECKSUM.txt)"
           test -n "${TAG:-}"
-          perl -0777 -i -pe \
-            "s#url:\\x22https://github.com/quiclane/picohttpparser-spm/releases/download/[^\\x22]+/PicoHTTPParser\\\\.xcframework\\\\.zip\\x22#url:\\x22https://github.com/quiclane/picohttpparser-spm/releases/download/${TAG}/PicoHTTPParser.xcframework.zip\\x22#g; \
-             s#checksum:\\x22[0-9a-f]{64}\\x22#checksum:\\x22${SUM}\\x22#g" \
-            Package.swift
+          perl -0777 -i -pe "s#url:\\x22https://github.com/quiclane/picohttpparser-spm/releases/download/[^\\x22]+/PicoHTTPParser\\\\.xcframework\\\\.zip\\x22#url:\\x22https://github.com/quiclane/picohttpparser-spm/releases/download/${TAG}/PicoHTTPParser.xcframework.zip\\x22#g; s#checksum:\\x22[0-9a-f]{64}\\x22#checksum:\\x22${SUM}\\x22#g" Package.swift
 
       - name: Commit root artifacts
         shell: bash
@@ -76,15 +74,3 @@ jobs:
           files: |
             PicoHTTPParser.xcframework.zip
             CHECKSUM.txt
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Prune old releases (keep newest 2)
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          for t in $(gh release list -L 100 --json tagName,createdAt --jq 'sort_by(.createdAt)|reverse|.[2:]|.[].tagName'); do
-            gh release delete "$t" -y
-          done
