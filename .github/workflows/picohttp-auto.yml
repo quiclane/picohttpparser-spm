@@ -9,11 +9,13 @@ permissions:
   contents: write
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-15-arm64
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: Build xcframework
         shell: bash
@@ -62,6 +64,8 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add Package.swift PicoHTTPParser.xcframework.zip CHECKSUM.txt
           git commit -m "auto: refresh PicoHTTPParser (${TAG})" || true
+          git fetch origin main
+          git rebase origin/main
           git push origin HEAD:main
 
       - name: Release
@@ -74,3 +78,15 @@ jobs:
           files: |
             PicoHTTPParser.xcframework.zip
             CHECKSUM.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prune old releases (keep newest 2)
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          for t in $(gh release list -L 100 --json tagName,createdAt --jq "sort_by(.createdAt)|reverse|.[2:]|.[].tagName"); do
+            gh release delete "$t" -y
+          done
