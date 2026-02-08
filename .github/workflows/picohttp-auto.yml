@@ -1,4 +1,5 @@
 name: picohttp-auto
+
 on:
   push:
     branches: [main]
@@ -20,18 +21,18 @@ jobs:
           set -euo pipefail
           ./scripts/picohttp-ios-xc.sh
           rm -f PicoHTTPParser.xcframework.zip CHECKSUM.txt
-          ditto -c -k --sequesterRsrc --keepParent PicoHTTPPArser.xcframework PicoHTTPPArser.xcframework.zip
+          ditto -c -k --sequesterRsrc --keepParent PicoHTTPParser.xcframework PicoHTTPParser.xcframework.zip
 
       - name: Checksum
         shell: bash
         run: |
           set -euo pipefail
-          swift package compute-checksum PicoHTTPPArser.xcframework.zip > CHECKSUM
-.txt
+          swift package compute-checksum PicoHTTPParser.xcframework.zip > CHECKSUM.txt
 
       - name: Upstream SHA
         shell: bash
-        run: echo "UP_SHA=$(cd upstream && git rev-parse HEAD)" >> "$GITHUB_ENV"
+        run: |
+          echo "UP_SHA=$(cd upstream && git rev-parse HEAD)" >> "$GITHUB_ENV"
 
       - name: Next version tag
         shell: bash
@@ -48,18 +49,21 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          SUM$(tr -d "\\n" < CHECKSUM.txt)
+          SUM=$(tr -d "\n" < CHECKSUM.txt)
           test -n "${TAG:-}"
-          perl -0777 -i -pe "s#url:\\x22https://github.com/quiclane/picohttpparser-spm/releases/download/[^\\\x22]+/PicoHTTPParser\\\\\.xcframework\\\\\\.zip\\x22#url:\\x22https://github.com/quiclane/picohttpparser-spm/releases/download/${TAG}/PicoHTTPPArser.xcframework.zip\\x22#g; s#checksum:\\x22[0-9a-f]{64}\\\x22#checksum:\\x22${SUM}\\\x22#g" Package.swift
+          perl -0777 -i -pe \
+            "s#url:\\x22https://github.com/quiclane/picohttpparser-spm/releases/download/[^\\x22]+/PicoHTTPParser\\\\.xcframework\\\\.zip\\x22#url:\\x22https://github.com/quiclane/picohttpparser-spm/releases/download/${TAG}/PicoHTTPParser.xcframework.zip\\x22#g; \
+             s#checksum:\\x22[0-9a-f]{64}\\x22#checksum:\\x22${SUM}\\x22#g" \
+            Package.swift
 
       - name: Commit root artifacts
         shell: bash
         run: |
           set -euo pipefail
           git config user.name github-actions[bot]
-          git config user.email actions@users.invalid
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add Package.swift PicoHTTPParser.xcframework.zip CHECKSUM.txt
-          git commit -m "auto: refresh PicoHTTPPArser (${TAG})" || true
+          git commit -m "auto: refresh PicoHTTPParser (${TAG})" || true
           git push origin HEAD:main
 
       - name: Release
@@ -68,8 +72,7 @@ jobs:
           tag_name: ${{ env.TAG }}
           body: |
             upstream=${{ env.UP_SHA }}
-            checksum=$(cat CHECKSUM
-.txt)
+            checksum=$(cat CHECKSUM.txt)
           files: |
             PicoHTTPParser.xcframework.zip
             CHECKSUM.txt
@@ -82,6 +85,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          for t in $(gh release list -L 100 --json tagName,createdAt --jq "sort_by(.createdAt)|reverse|.[2:]|.[].tagName"); do
+          for t in $(gh release list -L 100 --json tagName,createdAt --jq 'sort_by(.createdAt)|reverse|.[2:]|.[].tagName'); do
             gh release delete "$t" -y
           done
