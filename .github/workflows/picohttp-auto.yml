@@ -2,40 +2,110 @@ name: picohttp-auto
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 */5 * *'
-permissions:
-  contents: write
+    - cron: "0 */108 * * *"
 jobs:
   build:
     runs-on: macos-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           submodules: recursive
-      - run: git submodule update --remote --recursive
-      - run: ./scripts/picohttp-ios-xc.sh
-      - run: ditto -c -k --sequesterRsrc --keepParent PicoHTTPParser.xcframework PicoHTTPParser.xcframework.zip
-      - run: swift package compute-checksum PicoHTTPParser.xcframework.zip > CHECKSUM.txt
-      - run: echo "UP_SHA=$(cd upstream && git rev-parse HEAD)" >> $GITHUB_ENV
-      - run: echo "TAG=ios-$(date +%Y%m%d)-$(echo $UP_SHA | cut -c1-12)" >> $GITHUB_ENV
-      - run: |
+          fetch-depth: 0
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Update upstream
+        run: |
+          git submodule update --init --recursive
+          git -C upstream fetch --tags --force
+          git -C upstream reset --hard origin/master || git -C upstream reset --hard origin/main || true
+          git add upstream
+          git commit -m "auto: bump upstream" || true
+
+      - name: Build xcframework
+        run: |
+          ./scripts/picohttp-ios-xc.sh
+          rm -f PicoHTTPParser.xcframework.zip CHECKSUM.txt
+          ditto -c -k --sequesterRsrc --keepParent PicoHTTPParser.xcframework PicoHTTPParser.xcframework.zip
+          swift package compute-checksum PicoHTTPParser.xcframework.zip | tee CHECKSUM.txt
+
+      - name: Compute next tag
+        id: tag
+        run: |
+          git fetch --tags --force
+          LAST=$(git tag --list '[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1)
+          test -n "$LAST" || LAST="1.0.0"
+          MAJ=$(echo "$LAST" | cut -d. -f1)
+          MIN=$(echo "$LAST" | cut -d. -f2)
+          PAT=$(echo "$LAST" | cut -d. -f3)
+          NEXT="${MAJ}.${MIN}.$((PAT+1))"
+          echo "TAG=$NEXT" >> $GITHUB_ENV
+
+      - name: Update Package.swift
+        run: |
+          SUM="$(cat CHECKSUM.txt)"
+          cat > Package.swift <<EOF2
+// swift-tools-version:5.9
+import PackageDescription
+let package=Package(
+  name:"picohttpparser-spm",
+  platforms:[.iOS(.v12),.tvOS(.v12),.watchOS(.v5)],
+  products:[
+    .library(name:"PicoHTTPParser",targets:["PicoHTTPParser","PicoHTTPParserShim"]),
+    .library(name:"PicoHTTPParserShim",targets:["PicoHTTPParserShim"])
+  ],
+  targets:[
+    .binaryTarget(
+      name:"PicoHTTPParser",
+      url:"https://github.com/quiclane/picohttpparser-spm/releases/download/${TAG}/PicoHTTPParser.xcframework.zip",
+      checksum:"${SUM}"
+    ),
+    .target(
+      name:"PicoHTTPParserShim",
+      dependencies:["PicoHTTPParser"],
+      path:"Sources/PicoHTTPParserShim"
+    )
+  ]
+)
+EOF2
+
+      - name: Commit + push main
+        run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add PicoHTTPParser.xcframework PicoHTTPParser.xcframework.zip CHECKSUM.txt Package.swift Sources/PicoHTTPParserShim/PicoHTTPParserShim.swift .gitmodules upstream
-          git commit -m "auto: refresh PicoHTTPParser.xcframework" || true
+          git add -A
+          git commit -m "auto: refresh PicoHTTPParser.xcframework (${TAG})" || true
           git push origin HEAD:main
-      - uses: softprops/action-gh-release@v2
+
+      - name: Tag
+        run: |
+          git tag -f "${TAG}"
+          git push -f origin "${TAG}"
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.TAG }}
           body: |
-            upstream=${{ env.UP_SHA }}
+            upstream=$(cd upstream && git rev-parse HEAD)
             checksum=$(cat CHECKSUM.txt)
           files: |
             PicoHTTPParser.xcframework.zip
             CHECKSUM.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - env:
+
+      - name: Prune old releases (keep 2 newest semver)
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for t in $(gh release list -L 100 --json tagName,createdAt --jq 'sort_by(.createdAt)|reverse|.[2:]|.[].tagName');do gh release delete "$t" -y;done
+          gh release list -L 100 --json tagName,createdAt --jq '
+            map(select(.tagName|test("^[0-9]+\\.[0-9]+\\.[0-9]+$")))
+            | sort_by(.createdAt) | reverse | .[2:] | .[].tagName
+          ' | while read t; do
+            test -n "$t" && gh release delete "$t" -y || true
+          done
