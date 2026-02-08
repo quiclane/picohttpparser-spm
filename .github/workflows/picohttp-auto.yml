@@ -5,22 +5,18 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 3 * * *"
-
-concurrency:
-  group: picohttp-auto-main
-  cancel-in-progress: true
-
 permissions:
   contents: write
-
 jobs:
   build:
+    if: github.event_name != 'push' || github.actor != 'github-actions[bot]'
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
+          fetch-tags: true
 
       - name: Build xcframework
         shell: bash
@@ -67,16 +63,9 @@ jobs:
           set -euo pipefail
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-
           git add Package.swift PicoHTTPParser.xcframework.zip CHECKSUM.txt
-
-          if git diff --cached --quiet; then
-            echo "Nothing to commit"
-            exit 0
-          fi
-
-          git commit -m "auto: refresh PicoHTTPParser (${TAG})"
-          git pull --rebase origin main
+          git commit -m "auto: refresh PicoHTTPParser (${TAG})" || true
+          git pull --rebase --autostash origin main
           git push origin HEAD:main
 
       - name: Release
