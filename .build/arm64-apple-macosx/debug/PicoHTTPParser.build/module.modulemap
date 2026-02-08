@@ -1,0 +1,4 @@
+module PicoHTTPParser {
+    umbrella header "/Users/admin/Desktop/picohttpparser-spm/Sources/PicoHTTPParser/include/PicoHTTPParser.h"
+    export *
+}
