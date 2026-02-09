@@ -11,7 +11,7 @@ let package=Package(
     .binaryTarget(
       name:"PicoHTTPParser",
       url:"https://github.com/quiclane/picohttpparser-spm/releases/download/1.0.0/PicoHTTPParser.xcframework.zip",
-      checksum:"f9859b79cbfde749a26240b93b7f23a2c0e080d9988795591194fbc8c4bd4c9b"
+      checksum:"25c162187ec31332807f058ef25d8f328e7e2ccc82653469aa169f901a2b67c8"
     ),
     .target(
       name:"PicoHTTPParserShim",
